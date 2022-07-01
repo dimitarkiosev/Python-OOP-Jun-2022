@@ -1,6 +1,6 @@
-= = = = = = = = = = = = = = = = = = = = = = = = = 
-01. Rhombus of Stars
-= = = = = = = = = = = = = = = = = = = = = = = = =
+#= = = = = = = = = = = = = = = = = = = = = = = = = 
+#01. Rhombus of Stars
+#= = = = = = = = = = = = = = = = = = = = = = = = =
 def get_line(i, n):
     spaces_count = n - 1 - i
     stars_count = i + 1
@@ -18,9 +18,9 @@ def print_rhombus(n):
 n = int(input())
 print_rhombus(n)
 
-= = = = = = = = = = = = = = = = = = = = = = = = = 
-02. Scope Mess
-= = = = = = = = = = = = = = = = = = = = = = = = =
+#= = = = = = = = = = = = = = = = = = = = = = = = = 
+#02. Scope Mess
+#= = = = = = = = = = = = = = = = = = = = = = = = =
 x = "global"
 
 def outer():
@@ -44,9 +44,9 @@ print(x)
 outer()
 print(x)
 
-= = = = = = = = = = = = = = = = = = = = = = = = =
-03. Class Book
-= = = = = = = = = = = = = = = = = = = = = = = = =
+#= = = = = = = = = = = = = = = = = = = = = = = = =
+#03. Class Book
+#= = = = = = = = = = = = = = = = = = = = = = = = =
 class Book:
     def __init__(self, name, author, pages):
         self.name = name
@@ -58,9 +58,9 @@ print(book.name)
 print(book.author)
 print(book.pages)
 
-= = = = = = = = = = = = = = = = = = = = = = = = =
-04. Car
-= = = = = = = = = = = = = = = = = = = = = = = = =
+#= = = = = = = = = = = = = = = = = = = = = = = = =
+#04. Car
+#= = = = = = = = = = = = = = = = = = = = = = = = =
 class Car:
     def __init__(self, name, model, engine):
         self.name = name
@@ -73,9 +73,9 @@ class Car:
 car = Car("Kia", "Rio", "1.3L B3 I4")
 print(car.get_info())
 
-= = = = = = = = = = = = = = = = = = = = = = = = =
-05. Music
-= = = = = = = = = = = = = = = = = = = = = = = = =
+#= = = = = = = = = = = = = = = = = = = = = = = = =
+#05. Music
+#= = = = = = = = = = = = = = = = = = = = = = = = =
 class Music:
     def __init__(self, title, artist, lyrics):
         self.title = title
@@ -92,4 +92,4 @@ song = Music("Title", "Artist", "Lyrics")
 print(song.print_info())
 print(song.play())
 
-= = = = = = = = = = = = = = = = = = = = = = = = =
+#= = = = = = = = = = = = = = = = = = = = = = = = =
