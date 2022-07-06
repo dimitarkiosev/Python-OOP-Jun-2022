@@ -182,12 +182,9 @@ class Section:
         return f"Could not find task with the name {task_name}"
 
     def clean_section(self):
-        removed_counter = 0
-        for task in self.tasks:
-            if task.completed:
-                removed_count += 1
-                self.tasks.remove(task)
-        return f'Cleared {removed_counter} tasks.'
+        initial_count = len(self.tasks)
+        self.tasks = [t for t in self.tasks if not t.completed]
+        return f'Cleared {initial_count - len(self.tasks)} tasks.'
 
     def view_section(self):
         result = ''
@@ -248,7 +245,7 @@ print(section.view_section())
 = = = = = = = = = = = = = = = = = = = = = = = = =
 06. Guild System
 = = = = = = = = = = = = = = = = = = = = = = = = =
-# player.py
+# - - - - - - - - - - - - - - player.py - - - - - - - - - - - - - -
 class Player:
     def __init__(self, name, hp, mp):
         self.name = name
@@ -258,7 +255,7 @@ class Player:
         self.guild = 'Unaffiliated'
 
     def add_skill(self, skill_name, mana_cost):
-        if skill_name in self.skills.keys():
+        if skill_name in self.skills:
             return 'Skill already added'
         self.skills[skill_name] = mana_cost
         return f'Skill {skill_name} added to the collection of the player {self.name}'
@@ -271,9 +268,9 @@ class Player:
         result += f'MP: {self.mp}\n'
         for key, value in self.skills.items():
             result += f'==={key} - {value}\n'
-        return result
+        return result.strip()
 
-# guild.py
+# - - - - - - - - - - - - - - guild.py - - - - - - - - - - - - - -
 class Guild:
     def __init__(self, name):
         self.name = name
@@ -300,10 +297,10 @@ class Guild:
         result = ''
         result += f'Guild: {self.name}\n'
         for player in self.players:
-            result = result + player.player_info()
-        return result
+            result += player.player_info() + '\n'
+        return result.strip()
 
-#__init__.py
+# - - - - - - - - - - - - - - main.py - - - - - - - - - - - - - -
 player = Player("George", 50, 100)
 print(player.add_skill("Shield Break", 20))
 print(player.player_info())
@@ -314,13 +311,22 @@ print(guild.guild_info())
 = = = = = = = = = = = = = = = = = = = = = = = = =
 07. Spoopify
 = = = = = = = = = = = = = = = = = = = = = = = = =
+#song.py
+class Song:
+    def __init__(self, name, length, single):
+        self.name = name
+        self.length = length
+        self.single = single
+
+    def get_info(self):
+        return f'{self.name} - {self.length}'
+
 #album.py
 class Album:
-    def __init__(self, name, song):
+    def __init__(self, name, *songs):
         self.name = name
-        self.song = song
+        self.songs = list(songs)
         self.published = False
-        self.songs = list()
 
     def add_song(self, song):
         if song.single:
@@ -332,13 +338,14 @@ class Album:
         self.songs.append(song)
         return f'Song {song.name} has been added to the album {self.name}.'
 
-    def remove_song(self, song):
-        if song not in self.songs:
-            return f'Song is not in the album.'
+    def remove_song(self, song_name):
         if self.published:
             return f'Cannot remove songs. Album is published.'
-        self.songs.remove(song)
-        return f'Removed song {song.name} from album {album.name}.'
+        for song in self.songs:
+            if song.name == song_name:
+                self.songs.remove(song)
+                return f'Removed song {song_name} from album {self.name}.'
+        return f'Song is not in the album.'
 
     def publish(self):
         if self.published:
@@ -359,37 +366,26 @@ class Band:
         self.name = name
         self.albums = list()
 
-    def add_album(self, album: Album):
+    def add_album(self, album):
         if album in self.albums:
             return f'Band {self.name} already has {album.name} in their library.'
         self.albums.append(album)
         return f'Band {self.name} has added their newest album {album.name}.'
 
-    def remove_album(self, album):
-        for each in self.albums:
-            if each.name == album and each.published:
-                return f'Album has been published. It cannot be removed.'
-            if each.name == album:
+    def remove_album(self, album_name):
+        for album in self.albums:
+            if album.name == album_name:
+                if album.published:
+                    return f'Album has been published. It cannot be removed.'
                 self.albums.remove(album)
-                return f'Album {album.name} has been removed.'
-        return f'Album {album.name} is not found.'
+                return f'Album {album_name} has been removed.'
+        return f'Album {album_name} is not found.'
 
     def details(self):
-        result = ''
-        result += f'Band {self.name}\n'
+        result = f'Band {self.name}\n'
         for album in self.albums:
-            result += f'{album.details()}\n'
-        return result
-
-#song.py
-class Song:
-    def __init__(self, name, length, single):
-        self.name = name
-        self.length = length
-        self.single = single
-
-    def get_info(self):
-        return f'{song.name} - {song.length}'
+            result += album.details() + '\n'
+        return result.strip()
 
 #__init__.py
 song = Song("Running in the 90s", 3.45, False)
