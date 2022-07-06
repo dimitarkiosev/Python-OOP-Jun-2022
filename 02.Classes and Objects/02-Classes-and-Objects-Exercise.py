@@ -403,5 +403,75 @@ print(band.details())
 = = = = = = = = = = = = = = = = = = = = = = = = =
 08. Library
 = = = = = = = = = = = = = = = = = = = = = = = = =
+#- - - - - - - - - user.py - - - - - - - - -
+class User:
+    def __init__(self, user_id, username):
+        self.user_id = user_id
+        self.username = username
+        self.books = list()
+
+    def info(self):
+        return ', '.join(sorted(self.books))
+
+    def __str__(self):
+        return f'{self.user_id}, {self.username}, {self.books}'
+
+#- - - - - - - - - library.py - - - - - - - - -
+class Library:
+    def __init__(self):
+        self.user_records = list()
+        self.books_available = dict()
+        self.rented_books = dict()
+
+    def get_book(self, author, book_name, days_to_return, user):
+        if author in self.books_available:
+            if book_name in self.books_available[author]:
+                user.books.append(book_name)
+                self.books_available[author].remove(book_name)
+                if user.username not in self.rented_books:
+                    self.rented_books[user.username] = dict()
+                self.rented_books[user.username][book_name] = days_to_return
+                return f'{book_name} successfully rented for the next {days_to_return} days!'
+
+        for user_books in self.rented_books.values():
+            if book_name in user_books:
+                return f'The book "{book_name}" is already rented and will be available in {user_books[book_name]} days!'
+
+    def return_book(self, author, book_name, user):
+        if book_name not in user.books:
+            return f"{user.username} doesn't have this book in his/her records!"
+        user.books.remove(book_name)
+        self.books_available[author].append(book_name)
+        self.rented_books[user.username].pop(book_name)
+
+#- - - - - - - - - registration.py - - - - - - - - -
+class Registration:
+    def add_user(self, user, library):
+        if user in library.user_records:
+            return f'User with id = {user.user_id} already registered in the library!'
+        library.user_records.append(user)
+
+    def remove_user(self, user, library):
+        if user not in library.user_records:
+            return 'We could not find such user to remove!'
+        library.user_records.remove(user)
+
+    def change_username(self, user_id, new_username, library):
+        for user in library.user_records:
+            if user.user_id == user_id:
+                if user.username == new_username:
+                    return 'Please check again the provided username - it should be different than the username used so far!'
+                if user.username in library.rented_books:
+                    rented_books = library.rented_books[user.username]
+                    library.rented_books.pop(user.username)
+                    library.rented_books[new_username] = rented_books
+                user.username = new_username
+                return f'Username successfully changed to: {new_username} for user id: {user_id}'
+        return f'There is no user with id = {user_id}!'
+
+#- - - - - - - - - main.py - - - - - - - - -
+from project.library import Library
+from project.user import User
+from project.registration import Registration
 
 = = = = = = = = = = = = = = = = = = = = = = = = =
