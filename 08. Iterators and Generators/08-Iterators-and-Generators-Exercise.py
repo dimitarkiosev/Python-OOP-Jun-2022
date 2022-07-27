@@ -195,9 +195,11 @@ print(list(get_primes([-2, 0, 0, 1, 1, 0])))
 #= = = = = = = = = = = = = = = = = = = = = = = = = = =
 #09. Possible permutations
 #= = = = = = = = = = = = = = = = = = = = = = = = = = =
+from itertools import permutations
+
 def possible_permutations(ll):
-    for _ in len(ll):
-        for i in ll:
+    for result in permutations(ll):
+        yield list(result)
 
 [print(n) for n in possible_permutations([1, 2, 3])]
 [print(n) for n in possible_permutations([1])]
